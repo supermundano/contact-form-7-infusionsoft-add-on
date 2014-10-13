@@ -76,10 +76,10 @@
 							This plugin also supports email and phone HTML5 input types. If you wish to use HTML5, these can be used immediately, by copying and pasting any of the following into the form to the left:
 						</li>
 						<li>
-							Phone: <code>[tel infusionsoft-phone]</code>
+							Email: <code>[email* infusionsoft-email]</code>
 						</li>
 						<li>
-							Email: <code>[email* infusionsoft-email]</code>
+							Phone: <code>[tel infusionsoft-phone]</code>
 						</li>
 					</ul>
 				</td>

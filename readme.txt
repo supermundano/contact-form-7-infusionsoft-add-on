@@ -78,5 +78,9 @@ This plugin is not offered, sponsored, associated with or endorsed by Infusion S
 
 == Changelog ==
 
+= 1.0.1 =
+* Modification to Form Tag generator
+* Update Options page with link to InfusionSoft User Guide
+
 = 1.0.0 =
 * Initial version

@@ -28,7 +28,7 @@ function show_cf7_infusionsoft_addon_options(){ ?>
 				<tr>
 					<th scope="row"><label for="infusionsoft_api_key">InfusionSoft API Key:</label></th>
 					<td><input type="text" id="infusionsoft_api_key" class="regular-text" name="infusionsoft_api_key" value="<?php echo get_option('infusionsoft_api_key'); ?>">
-					<p class="description">Instructions for finding your API Key can be seen in <a href="#">the documentation</a>.</p></td>
+					<p class="description">Instructions for finding your API Key can be seen in <a href="http://ug.infusionsoft.com/article/AA-00442/0/How-do-I-enable-the-Infusionsoft-API-and-generate-an-API-Key.html">the InfusionSoft User Guide</a>.</p></td>
 				</tr>
 			</tbody>
 		</table>
