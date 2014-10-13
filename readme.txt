@@ -1,6 +1,6 @@
 === Contact Form 7 - Infusionsoft Add-on ===
 Contributors: rnevius
-Tags: contact form 7, cf7, contact form, contact forms 7, infusionsoft, forms, infusionsoft form, form, contact form 7 add-on, cf7 infusionsoft, contact form 7 infusionsoft, lead capture, contact form 7 crm, infusionsoft crm, lead form, email capture
+Tags: contact form 7, cf7, contact form, contact forms 7, infusionsoft, infusion soft, forms, infusionsoft form, form, contact form 7 add-on, cf7 infusionsoft, contact form 7 infusionsoft, lead capture, contact form 7 crm, infusionsoft crm, lead form, email capture, business, CRM, e-commerce, forms, marketing
 Requires at least: 3.8.2
 Tested up to: 4.0
 Stable tag: trunk
@@ -27,12 +27,14 @@ An add-on for Contact Form 7 (CF7) that provides a straightforward method to cap
 
 Please note that [Contact Form 7](https://wordpress.org/plugins/contact-form-7/) (version 3.9 or later) must be installed and activated in order for this plugin to be functional.
 
+*This plugin is not offered, sponsored, associated with or endorsed by Infusion Software, Inc.*
+
 
 == Frequently Asked Questions ==
 
 = Why doesn't this plugin do *insert feature here*? =
 
-If you have a feature suggestion, I'd love to hear about it. Feel free to leave a message on the "Support" tab of the plugin page, and I'll follow up as soon as possible.
+If you have a feature suggestion, I'd love to hear about it. Feel free to leave a message on the [Support tab of the plugin page](http://wordpress.org/support/plugin/contact-form-7-infusionsoft-add-on), and I'll follow up as soon as possible.
 
 = What contact data can I collect with this plugin? =
 
@@ -54,6 +56,10 @@ To generate an API Key (also referred to as the InfusionSoft API Encrypted Key),
 
 Tags must be [created in InfusionSoft](http://ug.infusionsoft.com/article/AA-00306/0/Add-edit-or-delete-a-tag.html) before they can be used with this plugin. Once a tag has been created, the "tag name" can be added on each contact form edit page. Contacts will be tagged if CF7 successfully delivers a message.
 
+= Can I contact InfusionSoft support, if I need help with this plugin? =
+
+This plugin is not offered, sponsored, associated with or endorsed by Infusion Software, Inc. If you need help finding your App Name, API Key, or adding contact tags, InfusionSoft support *should* be able to help you. However, as this plugin is not affiliated with InfusionSoft in any way, you'll need to contact the plugin author via the [Support Forum](http://wordpress.org/support/plugin/contact-form-7-infusionsoft-add-on), if you need help with the plugin itself.
+
 
 == Screenshots ==
 
@@ -64,6 +70,8 @@ Tags must be [created in InfusionSoft](http://ug.infusionsoft.com/article/AA-003
 3. All InfusionSoft input types are housed under the tag generator. To add InfusionSoft fields to your form, generate a tag and copy it to the form. HTML5 input types are supported, but must be manually entered into the form.
 
 4. This add-on also adds a "Contact Tag" input field on each form edit page. This tag must already exist in InfusionSoft.
+
+*This plugin is not offered, sponsored, associated with or endorsed by Infusion Software, Inc.*
 
 
 == Changelog ==
