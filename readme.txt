@@ -24,7 +24,7 @@ An add-on for Contact Form 7 (CF7) that provides a straightforward method to cap
 1. Unzip the downloaded plugin archive.
 2. Upload the inner 'contact-form-7-infusionsoft-add-on' directory to the '/wp-content/plugins/' directory on your web server.
 3. Activate the plugin through the 'Plugins' menu in WordPress.
-4. Navigate to the [CF7 InfusionSoft Add-on Settings Menu](https://wordpress.org/plugins/contact-form-7-infusionsoft-add-on/screenshots/) in the 'Settings' menu of your WordPress Dashboard.
+4. Navigate to the [CF7 InfusionSoft Add-on Settings Page](https://wordpress.org/plugins/contact-form-7-infusionsoft-add-on/screenshots/) in the 'Settings' menu of your WordPress Dashboard.
 5. Save your [InfusionSoft App Name and API Key](https://wordpress.org/plugins/contact-form-7-infusionsoft-add-on/faq/).
 
 Please note that [Contact Form 7](https://wordpress.org/plugins/contact-form-7/) (version 3.9 or later) must be installed and activated in order for this plugin to be functional.
