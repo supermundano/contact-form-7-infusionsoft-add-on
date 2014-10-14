@@ -1,4 +1,4 @@
-=== Contact Form 7 - Infusionsoft Add-on ===
+=== Contact Form 7 - InfusionSoft Add-on ===
 Contributors: rnevius
 Tags: contact form 7, cf7, contact form, contact forms 7, infusionsoft, infusion soft, forms, infusionsoft form, form, contact form 7 add-on, cf7 infusionsoft, contact form 7 infusionsoft, lead capture, contact form 7 crm, infusionsoft crm, lead form, email capture, business, CRM, e-commerce, forms, marketing
 Requires at least: 3.8.2
@@ -77,6 +77,9 @@ This plugin is not offered, sponsored, associated with or endorsed by Infusion S
 
 
 == Changelog ==
+
+= 1.0.2 =
+* Upgrade process for verifying that Contact Form 7 is installed and up to date. 
 
 = 1.0.1 =
 * Modification to Form Tag generator
