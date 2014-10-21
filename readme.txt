@@ -78,6 +78,9 @@ This plugin is not offered, sponsored, associated with or endorsed by Infusion S
 
 == Changelog ==
 
+= 1.0.3 =
+* Fixes a bug that prevented contacts from being added to InfusionSoft, if a tag was not supplied.
+
 = 1.0.2 =
 * Upgrade process for verifying that Contact Form 7 is installed and up to date. 
 

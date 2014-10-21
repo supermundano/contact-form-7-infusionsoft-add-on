@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Contact Form 7 - Infusionsoft Add-on
  * Description: An add-on for Contact Form 7 that provides a way to capture leads, tag customers, and send contact form data to InfusionSoft.
- * Version: 1.0.2
+ * Version: 1.0.3
  * Author: Ryan Nevius
  * Author URI: http://www.ryannevius.com
  * License: GPLv3
@@ -110,27 +110,20 @@ function cf7_infusionsoft_addon_signup_form_submitted( $contact_form ) {
 	$contact_form_id = $contact_form->id();
 
 	$submission = WPCF7_Submission::get_instance();
-  	$posted_data = $submission->get_posted_data();
-
-  	$user_tag = get_post_meta( $contact_form_id, '_cf7_infusionsoft_addon_tag_key', true );
-
-  	// If no tag was set, get out of here.
-  	if ( empty( $user_tag ) ) {
-  		return;
-  	}		
+  	$posted_data = $submission->get_posted_data();	
   	
   	// If the email address is not set
   	if ( empty($posted_data['infusionsoft-email']) ) {
   		return;
   	}
-  	// If all looks good, let's try to tag the user
-	cf7_infusionsoft_addon_tag_user($contact_form_id, $posted_data, $user_tag);
+  	// If all looks good, let's try to add the user
+	cf7_infusionsoft_addon_add_contact($contact_form_id, $posted_data);
 }
 add_action( 'wpcf7_mail_sent', 'cf7_infusionsoft_addon_signup_form_submitted' );
 
-
-function cf7_infusionsoft_addon_tag_user($contact_form_id, $posted_data, $user_tag) {
-	// Exit if the API credentials aren't entered
+function cf7_infusionsoft_addon_add_contact($contact_form_id, $posted_data) {
+	
+	// Exit right away if the API credentials aren't entered
 	$infusionsoft_app_name = get_option( 'infusionsoft_app_name');
 	$infusionsoft_api_key = get_option( 'infusionsoft_api_key');
 
@@ -146,40 +139,41 @@ function cf7_infusionsoft_addon_tag_user($contact_form_id, $posted_data, $user_t
     	return;
     }
 
-	// Get all existing InfusionSoft tag names
-	$tag_names = $app->dsQuery( 'ContactGroup' , 1000 , 0 , array('Id' => '%') , array('GroupName') );
-	// Assemble the names into a list of strings
-	foreach ($tag_names as $tag_name) {
-		$tag_list[] = $tag_name['GroupName'];
-	}
-	// If the tag is not a valid/existing InfusionSoft tag, get out of here.
-	if ( !in_array($user_tag, $tag_list) ) {
-		return;
-	}
-	// Or else, let's tag this shit
-	else {
-		// Assemble the contact data
-		$contact_data = array(
-				'FirstName' => ( !empty($posted_data['infusionsoft-first-name']) ) ? $posted_data['infusionsoft-first-name'] : '',
-				'LastName' => ( !empty($posted_data['infusionsoft-last-name']) ) ? $posted_data['infusionsoft-last-name'] : '',
-				'Email' => $posted_data['infusionsoft-email'],
-				'Phone1' => ( !empty($posted_data['infusionsoft-phone']) ) ? $posted_data['infusionsoft-phone'] : '',
-			);
-		// Add the contact to InfusionSoft, with a duplicate check
-		$contact_id = $app->addWithDupCheck($contact_data, 'EmailAndName');
+    // Assemble the contact data
+	$contact_data = array(
+			'FirstName' => ( !empty($posted_data['infusionsoft-first-name']) ) ? $posted_data['infusionsoft-first-name'] : '',
+			'LastName' => ( !empty($posted_data['infusionsoft-last-name']) ) ? $posted_data['infusionsoft-last-name'] : '',
+			'Email' => $posted_data['infusionsoft-email'],
+			'Phone1' => ( !empty($posted_data['infusionsoft-phone']) ) ? $posted_data['infusionsoft-phone'] : '',
+		);
+	// Add the contact to InfusionSoft, with a duplicate check
+	$contact_id = $app->addWithDupCheck($contact_data, 'EmailAndName');
 
-		// Get the ID of the string tag
-		$user_tag_id = $app->dsFind('ContactGroup', 1, 0, 'GroupName', $user_tag, array('Id'));
+	// Set opt-in marketing status
+	// InfusionSoft requires a "reason" for setting the opt-in marketing status
+	$reason = get_bloginfo('name') . ' Website Signup Form';
+	// And allow them to receive email marketing
+	$set_optin_status = $app->optIn($posted_data['infusionsoft-email'], $reason);
 
-		// Finally, tag the user
-		$tag_the_user = $app->grpAssign($contact_id, $user_tag_id[0]['Id']);
+	// Optionally tag the contact
+	$user_tag = get_post_meta( $contact_form_id, '_cf7_infusionsoft_addon_tag_key', true );
 
-		// InfusionSoft requires a "reason" for setting the opt-in marketing status
-		$reason = get_bloginfo('name') . ' Website Signup Form';
-
-		// And allow them to receive email marketing
-		$set_optin_status = $app->optIn($posted_data['infusionsoft-email'], $reason);
-	}
+  	if ( !empty( $user_tag ) ) {
+  		// Get all existing InfusionSoft tag names
+		$tag_names = $app->dsQuery( 'ContactGroup' , 1000 , 0 , array('Id' => '%') , array('GroupName') );
+		// Assemble the names into a list of strings
+		foreach ($tag_names as $tag_name) {
+			$tag_list[] = $tag_name['GroupName'];
+		}
+		// If the tag is not a valid/existing InfusionSoft tag, get out of here.
+		if ( !in_array($user_tag, $tag_list) ) {
+			return;
+		} 
+		else {
+			// Get the database ID of the existing tag
+			$user_tag_id = $app->dsFind('ContactGroup', 1, 0, 'GroupName', $user_tag, array('Id'));
+			// Finally, tag the user
+			$tag_the_user = $app->grpAssign($contact_id, $user_tag_id[0]['Id']);
+		}
+  	} 	
 }
-
-?>
