@@ -56,7 +56,7 @@ To generate an API Key (also referred to as the InfusionSoft API Encrypted Key),
 
 = How do I tag contacts? =
 
-Tags must be [created in InfusionSoft](http://ug.infusionsoft.com/article/AA-00306/0/Add-edit-or-delete-a-tag.html) before they can be used with this plugin. Once a tag has been created, the "tag name" can be added on each contact form edit page. Contacts will be tagged if CF7 successfully delivers a message. If you want add multiple tags to a contact, simply input a list of tags separated by commas (e.g. tag_1, tag_2, tag_3).
+Tags must be [created in InfusionSoft](http://ug.infusionsoft.com/article/AA-00306/0/Add-edit-or-delete-a-tag.html) before they can be used with this plugin. Once a tag has been created, the "tag name" can be added on each contact form edit page. Contacts will be tagged if CF7 successfully delivers a message. If you want to add multiple tags to a contact, simply input a list of tags separated by commas (e.g. tag_1, tag_2, tag_3).
 
 = Can I contact InfusionSoft support, if I need help with this plugin? =
 
