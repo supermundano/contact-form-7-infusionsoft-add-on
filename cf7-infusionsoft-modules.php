@@ -15,6 +15,7 @@
 						<select id="infusionsoft-tag" name="name">
 							<option value="infusionsoft-first-name">First Name</option>
 							<option value="infusionsoft-last-name">Last Name</option>
+							<option value="infusionsoft-company">Company</option>
 							<option value="infusionsoft-email">Email Address</option>
 							<option value="infusionsoft-phone">Phone Number</option>
 						</select>

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Contact Form 7 - Infusionsoft Add-on
  * Description: An add-on for Contact Form 7 that provides a way to capture leads, tag customers, and send contact form data to InfusionSoft.
- * Version: 1.0.3
+ * Version: 1.1.0
  * Author: Ryan Nevius
  * Author URI: http://www.ryannevius.com
  * License: GPLv3
@@ -79,15 +79,16 @@ function cf7_infusionsoft_addon_metaboxes( $post ) {
 	 */
 	$infusionsoft_addon_tag_value = get_post_meta( $post->id(), '_cf7_infusionsoft_addon_tag_key', true );
 
-	echo '<label for="cf7_infusionsoft_addon_tag"><strong>Contact Tag: </strong></label> ';
-	echo '<input type="text" placeholder="infusionsoft_tag_name" id="cf7_infusionsoft_addon_tag" name="cf7_infusionsoft_addon_tag" value="' . esc_attr( $infusionsoft_addon_tag_value ) . '" size="25" />';
+	echo '<label for="cf7_infusionsoft_addon_tags"><strong>Contact Tags: </strong></label> ';
+	echo '<input type="text" placeholder="infusionsoft_tag_name" id="cf7_infusionsoft_addon_tags" name="cf7_infusionsoft_addon_tags" value="' . esc_attr( $infusionsoft_addon_tag_value ) . '" size="25" />';
+	echo '<p class="howto">Separate multiple tags with commas. These must already be defined in InfusionSoft.</p>';
 }
 
 // Store InfusionSoft tag
 function cf7_infusionsoft_addon_save_contact_form( $contact_form ) {
 	$contact_form_id = $contact_form->id();
 
-	if ( !isset( $_POST ) || empty( $_POST ) || !isset( $_POST['cf7_infusionsoft_addon_tag'] ) || !isset( $_POST['cf7_infusionsoft_addon_metaboxes_nonce'] ) ) {
+	if ( !isset( $_POST ) || empty( $_POST ) || !isset( $_POST['cf7_infusionsoft_addon_tags'] ) || !isset( $_POST['cf7_infusionsoft_addon_metaboxes_nonce'] ) ) {
 		return;
 	}
 
@@ -96,10 +97,10 @@ function cf7_infusionsoft_addon_save_contact_form( $contact_form ) {
 		return;
 	}
 
-	if ( isset( $_POST['cf7_infusionsoft_addon_tag'] ) ) {
+	if ( isset( $_POST['cf7_infusionsoft_addon_tags'] ) ) {
         update_post_meta( $contact_form_id,
            '_cf7_infusionsoft_addon_tag_key',
-            $_POST['cf7_infusionsoft_addon_tag']
+            $_POST['cf7_infusionsoft_addon_tags']
         );
     }
 }
@@ -113,7 +114,7 @@ function cf7_infusionsoft_addon_signup_form_submitted( $contact_form ) {
   	$posted_data = $submission->get_posted_data();	
   	
   	// If the email address is not set
-  	if ( empty($posted_data['infusionsoft-email']) ) {
+  	if ( empty( $posted_data['infusionsoft-email'] ) ) {
   		return;
   	}
   	// If all looks good, let's try to add the user
@@ -143,6 +144,7 @@ function cf7_infusionsoft_addon_add_contact($contact_form_id, $posted_data) {
 	$contact_data = array(
 			'FirstName' => ( !empty($posted_data['infusionsoft-first-name']) ) ? $posted_data['infusionsoft-first-name'] : '',
 			'LastName' => ( !empty($posted_data['infusionsoft-last-name']) ) ? $posted_data['infusionsoft-last-name'] : '',
+			'Company' => ( !empty($posted_data['infusionsoft-company']) ) ? $posted_data['infusionsoft-company'] : '',
 			'Email' => $posted_data['infusionsoft-email'],
 			'Phone1' => ( !empty($posted_data['infusionsoft-phone']) ) ? $posted_data['infusionsoft-phone'] : '',
 		);
@@ -156,24 +158,19 @@ function cf7_infusionsoft_addon_add_contact($contact_form_id, $posted_data) {
 	$set_optin_status = $app->optIn($posted_data['infusionsoft-email'], $reason);
 
 	// Optionally tag the contact
-	$user_tag = get_post_meta( $contact_form_id, '_cf7_infusionsoft_addon_tag_key', true );
+	$user_tags = get_post_meta( $contact_form_id, '_cf7_infusionsoft_addon_tag_key', true );
 
-  	if ( !empty( $user_tag ) ) {
-  		// Get all existing InfusionSoft tag names
-		$tag_names = $app->dsQuery( 'ContactGroup' , 1000 , 0 , array('Id' => '%') , array('GroupName') );
-		// Assemble the names into a list of strings
-		foreach ($tag_names as $tag_name) {
-			$tag_list[] = $tag_name['GroupName'];
-		}
-		// If the tag is not a valid/existing InfusionSoft tag, get out of here.
-		if ( !in_array($user_tag, $tag_list) ) {
-			return;
-		} 
-		else {
-			// Get the database ID of the existing tag
-			$user_tag_id = $app->dsFind('ContactGroup', 1, 0, 'GroupName', $user_tag, array('Id'));
-			// Finally, tag the user
-			$tag_the_user = $app->grpAssign($contact_id, $user_tag_id[0]['Id']);
+  	if ( !empty( $user_tags ) ) {
+		// Assemble the names into a list of strings (with leading/ending whitespace trimmed)
+		$user_tags = array_map( 'trim', explode(',', $user_tags) );
+
+		foreach ($user_tags as $tag_name) {
+			// Search the ContactGroup table for each tag name
+			$tag_data = $app->dsFind( 'ContactGroup', 1, 0, 'GroupName', $tag_name, array('Id') );
+			// If the query returns a valid ID
+			if ( !empty( $tag_data[0]['Id'] ) ) {
+                $tag_the_user = $app->grpAssign( $contact_id, $tag_data[0]['Id'] );
+            }
 		}
   	} 	
 }
