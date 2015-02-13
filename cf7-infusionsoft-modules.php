@@ -18,6 +18,7 @@
 							<option value="infusionsoft-company">Company</option>
 							<option value="infusionsoft-email">Email Address</option>
 							<option value="infusionsoft-phone">Phone Number</option>
+                            <option value="infusionsoft-notes">Person Notes</option>
 						</select>
 					</td>
 					<td></td>

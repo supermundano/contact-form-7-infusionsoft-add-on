@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Contact Form 7 - Infusionsoft Add-on
  * Description: An add-on for Contact Form 7 that provides a way to capture leads, tag customers, and send contact form data to InfusionSoft.
- * Version: 1.1.0
+ * Version: 1.1.1
  * Author: Ryan Nevius
  * Author URI: http://www.ryannevius.com
  * License: GPLv3
@@ -147,6 +147,7 @@ function cf7_infusionsoft_addon_add_contact($contact_form_id, $posted_data) {
 			'Company' => ( !empty($posted_data['infusionsoft-company']) ) ? $posted_data['infusionsoft-company'] : '',
 			'Email' => $posted_data['infusionsoft-email'],
 			'Phone1' => ( !empty($posted_data['infusionsoft-phone']) ) ? $posted_data['infusionsoft-phone'] : '',
+            'ContactNotes' => ( !empty($posted_data['infusionsoft-notes']) ) ? $posted_data['infusionsoft-notes'] : '',
 		);
 	// Add the contact to InfusionSoft, with a duplicate check
 	$contact_id = $app->addWithDupCheck($contact_data, 'EmailAndName');

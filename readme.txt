@@ -2,7 +2,7 @@
 Contributors: rnevius
 Tags: contact form 7, cf7, contact form, contact forms 7, infusionsoft, infusion soft, forms, infusionsoft form, form, contact form 7 add-on, cf7 infusionsoft, contact form 7 infusionsoft, lead capture, contact form 7 crm, infusionsoft crm, lead form, email capture, business, CRM, e-commerce, forms, marketing
 Requires at least: 3.8.2
-Tested up to: 4.0
+Tested up to: 4.1
 Stable tag: trunk
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -40,7 +40,7 @@ If you have a feature suggestion, I'd love to hear about it. Feel free to leave 
 
 = What contact data can I collect with this plugin? =
 
-This add-on currently supports collection of First Name, Last Name, Company, Email, and Phone Number. If enough people find this plugin useful, I will include any other Contact fields that are requested. If you have a feature suggestion, feel free to leave a message on the "Support" forum.
+This add-on currently supports collection of First Name, Last Name, Company, Email, Person Notes, and Phone Number. If enough people find this plugin useful, I will include any other Contact fields that are requested. If you have a feature suggestion, feel free to leave a message on the "Support" forum.
 
 = Can I use HTML5 with this plugin? =
 
@@ -56,7 +56,7 @@ To generate an API Key (also referred to as the InfusionSoft API Encrypted Key),
 
 = How do I tag contacts? =
 
-Tags must be [created in InfusionSoft](http://ug.infusionsoft.com/article/AA-00306/0/Add-edit-or-delete-a-tag.html) before they can be used with this plugin. Once a tag has been created, the "tag name" can be added on each contact form edit page. Contacts will be tagged if CF7 successfully delivers a message. If you want to add multiple tags to a contact, simply input a list of tags separated by commas (e.g. tag_1, tag_2, tag_3).
+Tags must be [created in InfusionSoft](http://ug.infusionsoft.com/article/AA-00306/0/Add-edit-or-delete-a-tag.html) before they can be used with this plugin. Once a tag has been created, the "tag name" can be added on each contact form edit page. Contacts will be tagged if CF7 successfully delivers a message. If you want to add multiple tags to a contact, simply input a list of tags separated by commas (e.g. tag 1, tag 2, tag 3).
 
 = Can I contact InfusionSoft support, if I need help with this plugin? =
 
@@ -71,12 +71,15 @@ This plugin is not offered, sponsored, associated with or endorsed by Infusion S
 
 3. All InfusionSoft input types are housed under the tag generator. To add InfusionSoft fields to your form, generate a tag and copy it to the form. HTML5 input types are supported, but must be manually entered into the form.
 
-4. This add-on also adds a "Contact Tag" input field on each form edit page. These tags must already exist in InfusionSoft. To add multiple tags to a contact, simply input a comma-delimited list of tags (e.g. tag_1, tag_2, tag_3).
+4. This add-on also adds a "Contact Tag" input field on each form edit page. These tags must already exist in InfusionSoft. To add multiple tags to a contact, simply input a comma-delimited list of tags (e.g. tag 1, tag 2, tag 3). Copy these exactly how they appear in InfusionSoft.
 
 *This plugin is not offered, sponsored, associated with or endorsed by Infusion Software, Inc.*
 
 
 == Changelog ==
+
+= 1.1.1 =
+* Adds a "Person Notes" input field to the Form Tag generator.
 
 = 1.1.0 =
 * Adds support for adding multiple tags to contacts.
