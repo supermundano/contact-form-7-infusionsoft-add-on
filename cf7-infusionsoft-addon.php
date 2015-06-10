@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Contact Form 7 - Infusionsoft Add-on
  * Description: An add-on for Contact Form 7 that provides a way to capture leads, tag customers, and send contact form data to InfusionSoft.
- * Version: 1.1.1
+ * Version: 1.2.0
  * Author: Ryan Nevius
  * Author URI: http://www.ryannevius.com
  * License: GPLv3
@@ -42,33 +42,51 @@ add_action( 'admin_notices', 'cf7_infusionsoft_admin_notice' );
 /**
  * Enqueue Scripts with CF7 Dependencies
  */
-// function cf7_infusionsoft_enqueue_scripts() {
-// 	wp_enqueue_script( 'cf7-infusionsoft-scripts', plugin_dir_url(__FILE__) . 'cf7-infusionsoft-addon.js', ['jquery', 'wpcf7-admin-taggenerator', 'wpcf7-admin'], null, true );
-// }
-// add_action( 'admin_enqueue_scripts', 'cf7_infusionsoft_enqueue_scripts' );
+function cf7_infusionsoft_enqueue_scripts() {
+    if( !function_exists('wpcf7_add_meta_boxes') ) {
+	   wp_enqueue_script( 'cf7-infusionsoft-scripts', plugin_dir_url(__FILE__) . 'cf7-infusionsoft-scripts.js', ['jquery', 'wpcf7-admin-taggenerator', 'wpcf7-admin'], null, true );
+    }
+}
+add_action( 'admin_enqueue_scripts', 'cf7_infusionsoft_enqueue_scripts' );
 
 
 /**
  * Enable the InfusionSoft tags in the tag generator
  */
 function cf7_infusionsoft_add_tag_generator() {
-	if(function_exists('wpcf7_add_tag_generator')) {
-		wpcf7_add_tag_generator( 'infusionsoft', 'Infusionsoft Fields', 'wpcf7-tg-pane-infusionsoft', 'wpcf7_tg_pane_infusionsoft' );
+	if( function_exists('wpcf7_add_tag_generator') ) {
+        // Modify callback based on CF7 version
+        $callback = function_exists('wpcf7_add_meta_boxes') ? 'wpcf7_tag_generator_infusionsoft_old' : 'wpcf7_tag_generator_infusionsoft';
+		wpcf7_add_tag_generator( 'infusionsoft', 'Infusionsoft Fields', 'wpcf7-tg-pane-infusionsoft', $callback );
 	}
 }
-add_action( 'admin_init', 'cf7_infusionsoft_add_tag_generator', 20 );
-
+add_action( 'admin_init', 'cf7_infusionsoft_add_tag_generator', 99 );
 
 
 /**
- * Add meta boxes to the form edit page.
+ * Adds a box to the main column on the form edit page. 
+ *
+ * CF7 < 4.2
  */
-function cf7_infusionsoft_tag_meta_settings() {
-	add_meta_box( 'cf7-infusionsoft-settings', 'InfusionSoft Settings', 'cf7_infusionsoft_addon_metaboxes', '', 'form', 'low');
+function cf7_infusionsoft_tag_add_meta_boxes() {
+	add_meta_box( 'cf7-infusionsoft-settings', 'InfusionSoft Settings', 'cf7_infusionsoft_addon_metaboxes', null, 'form', 'low');
 }
-add_action( 'wpcf7_add_meta_boxes', 'cf7_infusionsoft_tag_meta_settings' );
+add_action( 'wpcf7_add_meta_boxes', 'cf7_infusionsoft_tag_add_meta_boxes' );
 
 
+/**
+ * Adds a tab to the editor on the form edit page. 
+ *
+ * CF7 >= 4.2
+ */
+function cf7_infusionsoft_tag_page_panels($panels) {
+    $panels['infusionsoft-panel'] = array( 'title' => 'InfusionSoft Options', 'callback' => 'cf7_infusionsoft_addon_panel_meta' );
+    return $panels;
+}
+add_action( 'wpcf7_editor_panels', 'cf7_infusionsoft_tag_page_panels' );
+
+
+// Create the meta boxes (CF7 < 4.2)
 function cf7_infusionsoft_addon_metaboxes( $post ) {
 	// Add an nonce field so we can check for it later.
 	wp_nonce_field( 'cf7_infusionsoft_addon_metaboxes', 'cf7_infusionsoft_addon_metaboxes_nonce' );
@@ -83,17 +101,28 @@ function cf7_infusionsoft_addon_metaboxes( $post ) {
 	echo '<input type="text" placeholder="infusionsoft_tag_name" id="cf7_infusionsoft_addon_tags" name="cf7_infusionsoft_addon_tags" value="' . esc_attr( $infusionsoft_addon_tag_value ) . '" size="25" />';
 	echo '<p class="howto">Separate multiple tags with commas. These must already be defined in InfusionSoft.</p>';
 }
+// Create the panel inputs (CF7 >= 4.2)
+function cf7_infusionsoft_addon_panel_meta( $post ) {
+    wp_nonce_field( 'cf7_infusionsoft_addon_metaboxes', 'cf7_infusionsoft_addon_metaboxes_nonce' );
+    $infusionsoft_addon_tag_value = get_post_meta( $post->id(), '_cf7_infusionsoft_addon_tag_key', true );
+
+    // The meta box content
+    echo '<h3>InfusionSoft Tags</h3>
+          <fieldset>
+            <legend>Enter tags exactly how they appear in InfusionSoft. Separate multiple tags with commas. <br>These must already be defined in InfusionSoft.</legend>
+            <input type="text" placeholder="Tag 1, tag_2, etc." id="cf7_infusionsoft_addon_tags" name="cf7_infusionsoft_addon_tags" value="' . esc_attr( $infusionsoft_addon_tag_value ) . '" size="25" />' .
+         '</fieldset>';
+}
 
 // Store InfusionSoft tag
 function cf7_infusionsoft_addon_save_contact_form( $contact_form ) {
 	$contact_form_id = $contact_form->id();
+    if ( !isset( $_POST ) || empty( $_POST ) || !isset( $_POST['cf7_infusionsoft_addon_tags'] ) || !isset( $_POST['cf7_infusionsoft_addon_metaboxes_nonce'] ) ) {
+        return;
+    }
 
-	if ( !isset( $_POST ) || empty( $_POST ) || !isset( $_POST['cf7_infusionsoft_addon_tags'] ) || !isset( $_POST['cf7_infusionsoft_addon_metaboxes_nonce'] ) ) {
-		return;
-	}
-
-	// Verify that the nonce is valid.
-	if ( ! wp_verify_nonce( $_POST['cf7_infusionsoft_addon_metaboxes_nonce'], 'cf7_infusionsoft_addon_metaboxes' ) ) {
+    // Verify that the nonce is valid.
+    if ( ! wp_verify_nonce( $_POST['cf7_infusionsoft_addon_metaboxes_nonce'], 'cf7_infusionsoft_addon_metaboxes' ) ) {
 		return;
 	}
 
@@ -104,7 +133,7 @@ function cf7_infusionsoft_addon_save_contact_form( $contact_form ) {
         );
     }
 }
-add_action( 'wpcf7_save_contact_form', 'cf7_infusionsoft_addon_save_contact_form' );
+add_action( 'wpcf7_after_save', 'cf7_infusionsoft_addon_save_contact_form' );
 
 
 function cf7_infusionsoft_addon_signup_form_submitted( $contact_form ) {

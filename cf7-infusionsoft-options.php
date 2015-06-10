@@ -34,4 +34,4 @@ function show_cf7_infusionsoft_addon_options(){ ?>
 		</table>
 		<?php submit_button(); ?>
 	</form>
-<?php } ?>
+<?php }
