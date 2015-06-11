@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Contact Form 7 - Infusionsoft Add-on
  * Description: An add-on for Contact Form 7 that provides a way to capture leads, tag customers, and send contact form data to InfusionSoft.
- * Version: 1.2.0
+ * Version: 1.2.1
  * Author: Ryan Nevius
  * Author URI: http://www.ryannevius.com
  * License: GPLv3
@@ -44,7 +44,7 @@ add_action( 'admin_notices', 'cf7_infusionsoft_admin_notice' );
  */
 function cf7_infusionsoft_enqueue_scripts() {
     if( !function_exists('wpcf7_add_meta_boxes') ) {
-	   wp_enqueue_script( 'cf7-infusionsoft-scripts', plugin_dir_url(__FILE__) . 'cf7-infusionsoft-scripts.js', ['jquery', 'wpcf7-admin-taggenerator', 'wpcf7-admin'], null, true );
+	   wp_enqueue_script( 'cf7-infusionsoft-scripts', plugin_dir_url(__FILE__) . 'cf7-infusionsoft-scripts.js', array('jquery', 'wpcf7-admin-taggenerator', 'wpcf7-admin'), null, true );
     }
 }
 add_action( 'admin_enqueue_scripts', 'cf7_infusionsoft_enqueue_scripts' );

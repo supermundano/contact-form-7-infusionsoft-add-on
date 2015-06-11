@@ -78,6 +78,9 @@ This plugin is not offered, sponsored, associated with or endorsed by Infusion S
 
 == Changelog ==
 
+= 1.2.1 =
+* Fixes bug caused by short-hand PHP array syntax in PHP versions 5.3 and below.
+
 = 1.2.0 =
 * Adds support for Contact Form 7 version 4.2+.
 
